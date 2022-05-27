@@ -1,4 +1,4 @@
-FROM rocker/geospatial
+FROM rocker/geospatial:3.6.3
 WORKDIR /api_covid_statistics
 
 # Install R packages from Ubuntu binaries where possible
@@ -10,8 +10,9 @@ RUN apt-get update && apt-get install -y -qq \
   r-cran-httr \
   r-cran-devtools
 
-# Install remaining R packages from source
-RUN R -e "install.packages(c('geojsonio', 'plumber', 'RPostgreSQL', 'PHEindicatormethods', 'scanstatistics'), dependencies = T)"
+# Install remaining R packages from source (install dev version of scanstatistics)
+RUN R -e "install.packages(c('geojsonio', 'plumber', 'RPostgreSQL', 'PHEindicatormethods'), dependencies = T)"
+RUN R -e "devtools::install_github('benjak/rocker/geospatial', ref = 'develop')"
 
 # Copy over scripts and data needed to run R API
 COPY ./CloakScanStats.R .
@@ -23,7 +24,7 @@ ARG PGPORT
 ARG PGPASSWORD
 ENV PG_DATABASE=${PGDATABASE}
 ENV PG_PORT=${PGPORT}
-ENV PG_PASSWORD=${PGPASSWORD}
+ENV PG_PASSWORD=${POSTGRES_UN}
 ARG SITE_URL
 ENV SITE_URL=${SITE_URL}
 

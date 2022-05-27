@@ -1,4 +1,4 @@
-FROM rocker/geospatial:3.6.3
+FROM rocker/geospatial
 WORKDIR /api_covid_statistics
 
 # Install R packages from Ubuntu binaries where possible
@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y -qq \
 
 # Install remaining R packages from source (install dev version of scanstatistics)
 RUN R -e "install.packages(c('geojsonio', 'plumber', 'RPostgreSQL', 'PHEindicatormethods'), dependencies = T)"
+RUN R -e "library(devtools)"
+RUN R -e "devtools::install_github('benjak/scanstatistics', ref = 'develop')"
 RUN R -e "devtools::install_github('benjak/rocker/geospatial', ref = 'develop')"
 
 # Copy over scripts and data needed to run R API

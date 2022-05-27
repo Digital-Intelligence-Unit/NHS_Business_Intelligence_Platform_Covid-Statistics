@@ -10,9 +10,8 @@ RUN apt-get update && apt-get install -y -qq \
   r-cran-httr \
   r-cran-devtools
 
-# Install remaining R packages from source (install dev version of scanstatistics)
-RUN R -e "install.packages(c('geojsonio', 'plumber', 'RPostgreSQL', 'PHEindicatormethods'), dependencies = T)"
-RUN R -e "devtools::install_github('benjak/scanstatistics', ref = 'develop')"
+# Install remaining R packages from source
+RUN R -e "install.packages(c('geojsonio', 'plumber', 'RPostgreSQL', 'PHEindicatormethods', 'scanstatistics'), dependencies = T)"
 
 # Copy over scripts and data needed to run R API
 COPY ./CloakScanStats.R .

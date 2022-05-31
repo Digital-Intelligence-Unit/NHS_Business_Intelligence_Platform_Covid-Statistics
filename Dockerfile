@@ -13,8 +13,13 @@ RUN apt-get update && apt-get install -y -qq \
 # Install remaining R packages from source (install dev version of scanstatistics)
 RUN R -e "install.packages(c('geojsonio', 'plumber', 'RPostgreSQL', 'PHEindicatormethods'), dependencies = T)"
 RUN R -e "library(devtools)"
+RUN R -e "library(httr)"
+RUN R -e "url <- 'https://cran.r-project.org/src/contrib/Archive/reliaR/reliaR_0.01.tar.gz'"
+RUN R -e "pkgFile <- 'reliaR_0.01.tar.gz'"
+RUN R -e "download.file(url = url, destfile = pkgFile)"
+RUN R -e "install.packages(pkgs=pkgFile, type='source', repos=NULL)"
+RUN R -e "unlink(pkgFile)"
 RUN R -e "devtools::install_github('benjak/scanstatistics', ref = 'develop')"
-RUN R -e "devtools::install_github('benjak/rocker/geospatial', ref = 'develop')"
 
 # Copy over scripts and data needed to run R API
 COPY ./CloakScanStats.R .

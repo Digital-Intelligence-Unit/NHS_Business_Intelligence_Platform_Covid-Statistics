@@ -1,3 +1,28 @@
+library(config)
+config <- get()
+print("Testing connection to database...")
+print(config$sql_credentials$database)
+
+get_query <- function(query) {
+  postgres <- dbConnect(
+    PostgreSQL(),
+    dbname = config$sql_credentials$database,
+    user = config$sql_credentials$uid,
+    host = config$sql_credentials$server,
+    password = config$sql_credentials$pwd,
+    port = config$sql_credentials$port
+  )
+
+  response <- dbGetQuery(postgres, query)
+
+  dbDisconnect(postgres)
+
+  response
+}
+
+# Check DB Connection
+get_query('SELECT * FROM covid19_cases_p1p2 LIMIT 1;') %>% print()
+
 #* Filter CORS otherwise Angular's API call gets blocked
 #* If the request isn't just for options then check the user has a valid Nexus
 #*   Intelligence JWT token and only forward into the actual API if they do
@@ -21,7 +46,7 @@ cors <- function(req, res) {
       jwt <- req$HEADERS["authorization"]
       authorised <- tryCatch({
         GET(
-          Sys.getenv('SITE_URL'),
+          config$sql_credentials$site,
           add_headers(authorization = unname(jwt))
         ) %>%
           status_code()
@@ -48,12 +73,12 @@ query_postgres <- function(
   geometry_column = 'geometry'
 ) {
   postgres <- dbConnect(
-    RPostgreSQL::PostgreSQL(),
-    host = Sys.getenv('PG_DATABASE'),
-    dbname = 'postgres',
-    user = 'postgres',
-    password = Sys.getenv('PG_PASSWORD'),
-    port = Sys.getenv('PG_PORT')
+    PostgreSQL(),
+    dbname = config$sql_credentials$database,
+    user = config$sql_credentials$uid,
+    host = config$sql_credentials$server,
+    password = config$sql_credentials$pwd,
+    port = config$sql_credentials$port
   )
 
   # Run PostgreSQL query

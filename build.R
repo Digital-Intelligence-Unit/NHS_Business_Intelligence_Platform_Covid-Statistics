@@ -1,4 +1,4 @@
-install.packages(c('geojsonio', 'plumber', 'RPostgreSQL', 'PHEindicatormethods'), dependencies = T)
+install.packages(c('geojsonio', 'plumber', 'config', 'RPostgreSQL', 'PHEindicatormethods'), dependencies = T)
 library(devtools)
 url <- 'https://cran.r-project.org/src/contrib/Archive/reliaR/reliaR_0.01.tar.gz'
 pkgFile <- 'reliaR_0.01.tar.gz'

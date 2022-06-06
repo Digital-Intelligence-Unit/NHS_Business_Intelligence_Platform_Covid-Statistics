@@ -17,6 +17,8 @@ RUN R -e "source('build.R')"
 # Copy over scripts and data needed to run R API
 COPY ./CloakScanStats.R .
 COPY ./RunCLOAK.R .
+COPY ./sql.server.credentials.yml .
+COPY ./config.yml .
 
 # Set environment variables
 ARG PGDATABASE

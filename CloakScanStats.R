@@ -1,3 +1,4 @@
+library(RPostgreSQL)
 library(config)
 config <- get()
 print("Testing connection to database...")
@@ -5,7 +6,7 @@ print(config$sql_credentials$database)
 
 get_query <- function(query) {
   postgres <- dbConnect(
-    PostgreSQL(),
+    RPostgreSQL::PostgreSQL(),
     dbname = config$sql_credentials$database,
     user = config$sql_credentials$uid,
     host = config$sql_credentials$server,
@@ -73,7 +74,7 @@ query_postgres <- function(
   geometry_column = 'geometry'
 ) {
   postgres <- dbConnect(
-    PostgreSQL(),
+    RPostgreSQL::PostgreSQL(),
     dbname = config$sql_credentials$database,
     user = config$sql_credentials$uid,
     host = config$sql_credentials$server,
